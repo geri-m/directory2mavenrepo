@@ -2,9 +2,7 @@ stages:
   - build
 
 build:
-  tags:
-    - maven3
-    - java8
+  image: maven:3.5.2-jdk-8-alpine
   stage: build
   script:
     # Parameter -B is "non-interactive"
