@@ -1,0 +1,101 @@
+## tmp directories
+/tmp
+/temp
+
+## Eclipse CDT build directory and makefiles
+/Debug
+subdir.mk
+
+
+## target directory
+/target
+
+# emacs tmp and save files
+.#*#
+*~
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+ 
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+ 
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+ 
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+## node
+# Logs
+logs
+*.log
+
+# IDEA realeaty.
+.idea
+.gradle
+*.idea
+*.iml
+/gradle
+/build
+/build/
+/target
+/target/
+# target folder and all subfolders.
+target/
+/classes
+/classes/
+# class Folder and all subfolder
+classes/
+
+# xcode, added by christian
+*.xcuserdatad
+
+# Ansible
+*.retry
+
+# Vagrant
+.vagrant
+
+# Automatically generated POM Files
+dependency-reduced-pom.xml
+pom.xml.versionsBackup
