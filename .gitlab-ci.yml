@@ -13,7 +13,7 @@ build_branches:
   artifacts:
     expire_in: 1 week
     paths:
-      /builds/geri-m/directory2mavenrepo/target/*.jar
+      - target/*.jar
   only:
     - branches
   except:
@@ -29,6 +29,6 @@ build_master:
     - mvn clean dependency:tree compile -B -X
   artifacts:
     paths:
-      /builds/geri-m/directory2mavenrepo/target/*.jar
+      - target/*.jar
   only:
     - master
