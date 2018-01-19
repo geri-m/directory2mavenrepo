@@ -7,7 +7,7 @@
     <groupId>at.madlmayr.utils</groupId>
     <artifactId>d2m2</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
 
     <organization>
