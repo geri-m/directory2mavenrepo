@@ -4,8 +4,6 @@ stages:
 build_branches:
   image: maven:3.5.2-jdk-8-alpine
   stage: build
-  before_script:
-    - docker info
   script:
     # Parameter -B is "non-interactive"
     - mvn clean dependency:tree compile -B -X
@@ -22,8 +20,6 @@ build_branches:
 build_master:
   image: maven:3.5.2-jdk-8-alpine
   stage: build
-  before_script:
-    - docker info
   script:
     # Parameter -B is "non-interactive"
     - mvn clean dependency:tree compile -B -X
