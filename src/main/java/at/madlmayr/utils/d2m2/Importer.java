@@ -1,5 +1,31 @@
-package at.madlmayr.utils.d2m2;
+/*
 
+ (c) by Gerald Madlmayr
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+ For all third party components incorporated into this Software, those
+ components are licensed under the original license provided by the owner of the
+ applicable component.
+*/
+
+package at.madlmayr.utils.d2m2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +48,9 @@ public class Importer {
     // cut of if the file tree is too deep.
     private static final int MAX_RECURSION_DEPTH = 25;
     private static final String ERROR_MSG_TOO_SHORT_PATH = "There are too little elements in the Path '%s'";
-    private static final String ERROR_VERSION_EMPTY ="Version is empty";
-    private static final String ERROR_ARTIFACT_ID_EMPTY ="ArtifactId is empty";
-    private static final String ERROR_GROUP_ID_EMPTY ="Element of GroupId is empty";
+    private static final String ERROR_VERSION_EMPTY = "Version is empty";
+    private static final String ERROR_ARTIFACT_ID_EMPTY = "ArtifactId is empty";
+    private static final String ERROR_GROUP_ID_EMPTY = "Element of GroupId is empty";
 
     private static final String IMPORT_STRING = "mvn deploy:deploy-file -Dfile=%s -DgroupId=%s -DartifactId=%s -Dversion=%s -Dpackaging=jar -DrepositoryId=%s -Durl=%s";
 
@@ -37,17 +63,17 @@ public class Importer {
             System.exit(-1);
         }
 
-        if(isStringNotOkay(args[0])){
+        if (isStringNotOkay(args[0])) {
             LOGGER.error("Path must not be empty");
             System.exit(-1);
         }
 
-        if(isStringNotOkay(args[1])){
+        if (isStringNotOkay(args[1])) {
             LOGGER.error("RepositoryId must not be empty");
             System.exit(-1);
         }
 
-        if(isStringNotOkay(args[2])){
+        if (isStringNotOkay(args[2])) {
             LOGGER.error("Repository Path must not be empty");
             System.exit(-1);
         }
@@ -57,7 +83,7 @@ public class Importer {
         LOGGER.info("RepositoryId:   {}", args[1]);
         LOGGER.info("URL of M2 Repo: {}", args[2]);
 
-        if(isStringNotOkay(args[2])){
+        if (isStringNotOkay(args[2])) {
             LOGGER.info("** Doing Import ** ");
         } else {
             LOGGER.info("** Dry run only **");
@@ -70,9 +96,9 @@ public class Importer {
 
 
         // now importing all the dependencies into the given maven repo
-        for(final MavenDependency dep : dependencies){
+        for (final MavenDependency dep : dependencies) {
             final String cmd = String.format(IMPORT_STRING, dep.getPath(), dep.getGroupId(), dep.getArtifactId(), dep.getVersion(), args[1], args[2]);
-            if(isStringNotOkay(args[2])){
+            if (isStringNotOkay(args[2])) {
                 executeCommand(cmd);
                 LOGGER.info("Cmd Successful: {}", cmd);
             } else {
@@ -88,7 +114,7 @@ public class Importer {
         for (final File file : files) {
             // we have a directory - walk into it.
             if (file.isDirectory()) {
-                if(depth > MAX_RECURSION_DEPTH){
+                if (depth > MAX_RECURSION_DEPTH) {
                     LOGGER.warn("Maximum Recursion Depth of {} reached in {}", depth, file.getAbsolutePath());
                     return;
                 } else {
@@ -111,43 +137,39 @@ public class Importer {
         }
     }
 
-    private static MavenDependency createDtoFromPath(final String baseDir, final File jarFile) throws MavenDependencyParseException{
+    private static MavenDependency createDtoFromPath(final String baseDir, final File jarFile) throws MavenDependencyParseException {
 
         // create the relative path
         final String relative = new File(baseDir).toURI().relativize(new File(jarFile.getAbsolutePath()).toURI()).getPath();
 
         // now Parsing the relative path, eg
-
         // last Element is fileName
         // last - 1 = Version
         // last - 2 = artifactId
         // last - 3 to 0 is groupId.
 
-        // com/ibm/rational/test/ft/autbase/8.5.0/autbase-8.5.0.jar
-
-
         final String[] elements = relative.split("/");
 
         // in this case we have an error
-        if(elements.length < 4){
+        if (elements.length < 4) {
             throw new MavenDependencyParseException(String.format(ERROR_MSG_TOO_SHORT_PATH, relative));
         }
 
         // Artifact ID
-        if(isStringNotOkay(elements[elements.length-3])){
+        if (isStringNotOkay(elements[elements.length - 3])) {
             throw new MavenDependencyParseException(ERROR_ARTIFACT_ID_EMPTY);
         }
 
         // Version
-        if(isStringNotOkay(elements[elements.length-2])){
+        if (isStringNotOkay(elements[elements.length - 2])) {
             throw new MavenDependencyParseException(ERROR_VERSION_EMPTY);
         }
 
         // Create a sub array with the elements of the groupId
         final String[] groupIdElement = Arrays.copyOfRange(elements, 0, elements.length - 3);
 
-        for(final String groupElement : groupIdElement){
-            if(isStringNotOkay(groupElement)){
+        for (final String groupElement : groupIdElement) {
+            if (isStringNotOkay(groupElement)) {
                 throw new MavenDependencyParseException(ERROR_GROUP_ID_EMPTY);
             }
         }
@@ -156,7 +178,7 @@ public class Importer {
         final String groupId = String.join(".", groupIdElement);
 
         // Create the dependency
-        return new MavenDependency(groupId, elements[elements.length-3], elements[elements.length-2], jarFile);
+        return new MavenDependency(groupId, elements[elements.length - 3], elements[elements.length - 2], jarFile);
     }
 
     /**
@@ -166,7 +188,7 @@ public class Importer {
      * @return true if the string is "broken", false if the string is "okay"
      */
 
-    private static boolean isStringNotOkay(final String toCheck){
+    private static boolean isStringNotOkay(final String toCheck) {
         return (toCheck == null || toCheck.length() == 0);
     }
 
@@ -190,7 +212,7 @@ public class Importer {
 
             // printing the output to the log.
             String line;
-            while ((line = reader.readLine())!= null) {
+            while ((line = reader.readLine()) != null) {
                 LOGGER.debug(line);
             }
 
