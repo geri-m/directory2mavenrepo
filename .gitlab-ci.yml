@@ -1,0 +1,11 @@
+stages:
+  - build
+
+build:
+  tags:
+    - maven3
+    - java8
+  stage: build
+  script:
+    # Parameter -B is "non-interactive"
+    - mvn clean dependency:tree compile -B -X
