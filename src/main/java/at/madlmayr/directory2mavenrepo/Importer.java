@@ -25,7 +25,7 @@
  applicable component.
 */
 
-package at.madlmayr.utils.d2m2;
+package at.madlmayr.directory2mavenrepo;
 
 import java.io.BufferedReader;
 import java.io.File;

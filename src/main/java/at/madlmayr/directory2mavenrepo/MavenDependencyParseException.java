@@ -25,45 +25,23 @@
  applicable component.
 */
 
-package at.madlmayr.utils.d2m2;
-
-import java.io.File;
+package at.madlmayr.directory2mavenrepo;
 
 /**
- * DTO for one maven dependency
+ * Exception that occure during creating a maven dependency
  */
-public class MavenDependency {
+public class MavenDependencyParseException extends Exception {
 
-  private final String version;
-  private final String artifactId;
-  private final String groupId;
-  private final File path;
-
-  public MavenDependency(final String groupId, final String artifactId, final String version, final File path) {
-    this.version = version;
-    this.artifactId = artifactId;
-    this.groupId = groupId;
-    this.path = path;
+  public MavenDependencyParseException(final String msg) {
+    super(msg);
   }
 
-  public String getVersion() {
-    return version;
+  public MavenDependencyParseException(final Exception e) {
+    super(e);
   }
 
-  public String getArtifactId() {
-    return artifactId;
+  public MavenDependencyParseException(final Throwable t) {
+    super(t);
   }
 
-  public String getGroupId() {
-    return groupId;
-  }
-
-  public File getPath() {
-    return path;
-  }
-
-  @Override
-  public String toString() {
-    return "MavenDependency{" + "version='" + version + '\'' + ", artifactId='" + artifactId + '\'' + ", groupId='" + groupId + '\'' + ", path=" + path + '}';
-  }
 }

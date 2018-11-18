@@ -4,18 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>at.madlmayr.utils</groupId>
-  <artifactId>d2m2</artifactId>
+  <groupId>at.madlmayr</groupId>
+  <artifactId>directory2mavenrepo</artifactId>
   <packaging>jar</packaging>
   <version>0.0.2-SNAPSHOT</version>
 
 
   <organization>
     <name>Gerald Madlmayr</name>
-    <url>http://www.Madlmayr.at/</url>
+    <url>http://www.madlmayr.at/</url>
   </organization>
   <inceptionYear>2018</inceptionYear>
-
+  <description>A tool for putting a maven 2 directory structure into a maven repo using the maven command line tool.</description>
 
   <properties>
     <project.build.sourceEncoding>
@@ -85,7 +85,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>at.madlmayr.utils.d2m2.Importer</mainClass>
+                  <mainClass>at.madlmayr.directory2mavenrepo.Importer</mainClass>
                 </transformer>
               </transformers>
             </configuration>
