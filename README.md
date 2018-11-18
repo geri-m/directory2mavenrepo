@@ -1,13 +1,11 @@
-# General
+# D2M2 (Directory-2-Maven2)
 
-With this tool you can import a directory structure into a maven repo. 
+With this tool you can import a directory structure (eg. from your local disc) into a maven repo (eg Nexus, Artifactory). 
 
-There are three
-parameters required:
-- the directory root
-- the URL of the repo
-- the ID for the repo
-
+There are three parameters required:
+- the directory root on our disk/network drrive
+- the URL of the repo (check your settings.xml, repository element)
+- the ID for the repo (check your settings.xml, repository element)
 
 
 ## Build
@@ -38,4 +36,4 @@ In order to run the maven command, the "mvn" binary needs to be part of the $PAT
 
 ## Platforms
 
-The Script has been tested on OSX and Ubuntu so far. It is very likly that there is an issue on Windows as the Path separation is different on Windows.
+The Script has been tested on OSX and Ubuntu so far. It is very likely that there is an issue on Windows as the Path separation is different on Windows.
