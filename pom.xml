@@ -29,8 +29,9 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.shade.plugin.version>3.1.1</maven.shade.plugin.version>
     <java.version>1.8</java.version>
-    <log4j.version>2.8.2</log4j.version>
-    <jul-to-slf4j.version>1.7.25</jul-to-slf4j.version>
+    <log4j.version>2.11.1</log4j.version>
+    <slf4j.verions>1.7.25</slf4j.verions>
+    <junit.version>5.3.1</junit.version>
   </properties>
 
 
@@ -44,24 +45,23 @@
       <version>${log4j.version}</version>
     </dependency>
 
-    <!-- Log4j API and Core implementation required for binding -->
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>${log4j.version}</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.verions}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${log4j.version}</version>
-    </dependency>
-
 
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>jul-to-slf4j</artifactId>
-      <version>${jul-to-slf4j.version}</version>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.verions}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

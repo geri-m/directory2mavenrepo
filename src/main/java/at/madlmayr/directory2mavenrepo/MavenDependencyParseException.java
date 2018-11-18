@@ -28,20 +28,12 @@
 package at.madlmayr.directory2mavenrepo;
 
 /**
- * Exception that occure during creating a maven dependency
+ * Exception that occur during creating a maven dependency
  */
 public class MavenDependencyParseException extends Exception {
 
   public MavenDependencyParseException(final String msg) {
     super(msg);
-  }
-
-  public MavenDependencyParseException(final Exception e) {
-    super(e);
-  }
-
-  public MavenDependencyParseException(final Throwable t) {
-    super(t);
   }
 
 }

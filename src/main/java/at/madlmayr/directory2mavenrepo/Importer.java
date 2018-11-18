@@ -47,6 +47,7 @@ public class Importer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Importer.class);
   private static final String EXT = ".jar";
+  private static final String DRY_RUN_STRING = "dryrun";
 
   // cut of if the file tree is too deep.
   private static final int MAX_RECURSION_DEPTH = 25;
@@ -64,12 +65,6 @@ public class Importer {
 
   public static void main(final String[] args) {
 
-    final String pathToMavenDepDirectory;
-    final String idOfMavenRepo;
-    final URL urlOfMavenRepo;
-
-    // defensive. dryrun is true
-    boolean dryRun = true;
 
     // we require 3 or 4 arguments.
     if ((args.length != 3) && (args.length != 4)) {
@@ -78,66 +73,58 @@ public class Importer {
       return;
     }
 
-    // Checking Parameter 1 - 3 for Strings
+    // Checking Parameter 1 - 4 for Strings and assign variables
     try {
-      isStringOkayOrException(args[0], "Path");
-      isStringOkayOrException(args[1], "RepositoryId");
-      isStringOkayOrException(args[2], "RepositoryUrl");
-    } catch (final IllegalAccessException e) {
-      LOGGER.error(e.getMessage());
-      System.exit(-1);
-    }
+      final String pathToMavenDepDirectory;
+      final String idOfMavenRepo;
+      final URL urlOfMavenRepo;
 
-    pathToMavenDepDirectory = args[0];
-    idOfMavenRepo = args[1];
+      // defensive. dryrun is true
+      final boolean dryRun;
 
-    // Checking Parameter 3 for URL
-    try {
-      urlOfMavenRepo = new URL(args[2]);
-    } catch (final MalformedURLException e) {
-      LOGGER.error("Repo URL '{}' is not valid: '{}'", args[2], e.getMessage());
-      return;
-    }
+      pathToMavenDepDirectory = isStringOkayOrException(args[0], "Path");
+      idOfMavenRepo = isStringOkayOrException(args[1], "RepositoryId");
+      // Checking Parameter 3 for URL
+      urlOfMavenRepo = new URL(isStringOkayOrException(args[2], "RepositoryUrl"));
 
-    // Checking Parameter 4 for "dryrun"
-    try {
-      isStringOkayOrException(args[3], "DryRun Parameter");
-      if ("dryrun".equals(args[3])) {
+      if (DRY_RUN_STRING.equals(isStringOkayOrException(args[3], "DryRun Parameter"))) {
         LOGGER.info("** Dry run only **");
         dryRun = true;
       } else {
-        LOGGER.error("Unknown Parameter #4: '{}'. Should be 'dryrun' or empty", args[3]);
+        dryRun = false;
+      }
+
+      // This is the list of all maven Dependencies that we want to import.
+      final List<MavenDependency> dependencies = new ArrayList<>();
+      final File[] files = new File(pathToMavenDepDirectory).listFiles();
+      if (files != null) {
+        createFileList(files, pathToMavenDepDirectory, 0, dependencies);
+      } else {
+        LOGGER.error("Amount of Files in the given Path '{}', was null", pathToMavenDepDirectory);
         System.exit(-1);
       }
-    } catch (final IllegalAccessException e) {
-      LOGGER.info("** Doing Import ** ");
-      dryRun = false;
-    }
 
-
-    // This is the list of all maven Dependencies that we want to import.
-    final List<MavenDependency> dependencies = new ArrayList<>();
-    final File[] files = new File(pathToMavenDepDirectory).listFiles();
-    if (files != null) {
-      createFileList(files, pathToMavenDepDirectory, 0, dependencies);
-    } else {
-      LOGGER.error("Amount of Files in the given Path '{}', was null", pathToMavenDepDirectory);
-      return;
-    }
-
-
-    // now importing all the dependencies into the given maven repo
-    for (final MavenDependency dep : dependencies) {
-      final String cmd = String.format(IMPORT_STRING, dep.getPath(), dep.getGroupId(), dep.getArtifactId(), dep.getVersion(), idOfMavenRepo, urlOfMavenRepo);
-      if (dryRun) {
-        LOGGER.info("Dryrun: '{}'", cmd);
-      } else {
-        executeCommand(cmd);
-        LOGGER.info("Cmd Successful: {}", cmd);
+      // now importing all the dependencies into the given maven repo
+      for (final MavenDependency dep : dependencies) {
+        final String cmd = String.format(IMPORT_STRING, dep.getPath(), dep.getGroupId(),
+            dep.getArtifactId(), dep.getVersion(), idOfMavenRepo, urlOfMavenRepo);
+        if (dryRun) {
+          LOGGER.info("Dryrun: '{}'", cmd);
+        } else {
+          executeCommand(cmd);
+          LOGGER.info("Cmd Successful: {}", cmd);
+        }
       }
-    }
 
-    LOGGER.info("Completed.");
+      LOGGER.info("Import done.");
+
+    } catch (final IllegalAccessException e) {
+      LOGGER.error(e.getMessage());
+      System.exit(-1);
+    } catch (final MalformedURLException e) {
+      LOGGER.error("Repo URL '{}' is not valid: '{}'", args[2], e.getMessage());
+      System.exit(-1);
+    }
   }
 
   private static void createFileList(final File[] files, final String baseDir, final int depth, final List<MavenDependency> dependencies) {
@@ -168,6 +155,7 @@ public class Importer {
           }
         }
         // we are not interested in other files
+        // TODO: if there is a POM, we might be interested in using that one.
       }
     }
   }
@@ -229,13 +217,14 @@ public class Importer {
    * Simple method to check if a String is null or 0 (= broken)
    *
    * @param toCheck String to check
-   * @return true if the string is "broken", false if the string is "okay"
+   * @return returns the string to check.
    */
 
-  private static void isStringOkayOrException(final String toCheck, final String parameterName) throws IllegalAccessException {
+  private static String isStringOkayOrException(final String toCheck, final String parameterName) throws IllegalAccessException {
     if ((toCheck == null) || (toCheck.isEmpty())) {
       throw new IllegalAccessException(String.format(ERROR_PARAMETER_NAME_NOT_VALID, parameterName));
     }
+    return toCheck;
   }
 
 
